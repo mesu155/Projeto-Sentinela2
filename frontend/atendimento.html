@@ -7,6 +7,15 @@
 
 <input id="nome" placeholder="Nome">
 <input id="cpf" placeholder="CPF">
+<input id="datadenascimento" placeholder="Data de Nascimento">
+<input id="sexo" placeholder="Sexo">
+<input id="nomedamae" placeholder="Nome da Mãe">
+<input id="estadocivil" placeholder="Estado Civil">
+<input id="endereco" placeholder="Endereço">
+<input id="telefone" placeholder="Telefone">
+<input id="email" placeholder="E-mail">
+<input id="contatodeemergencia" placeholder="Contato de Emergência">
+
 
 <select id="tipo">
   <option>Convenio</option>
@@ -26,6 +35,14 @@ function cadastrar(){
   body: JSON.stringify({
     nome: nome.value,
     cpf: cpf.value,
+    datadenascimento: datadenascimento.value,
+    sexo: sexo.value,
+    nomedamae: nomedamae.value,
+    estadocivil: estadocivil.value,
+    endereco: endereco.value,
+    telefone: telefone.value,
+    email: email.value,
+    contatodeemergencia: contatodeemergencia.value,
     tipo: tipo.value
   })
  });
