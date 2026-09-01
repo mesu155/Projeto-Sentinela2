@@ -1,53 +1,423 @@
 <!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="style.css"></head>
-<body>
-<div class="container">
-<h2>Atendimento</h2>
-
-<input id="nome" placeholder="Nome">
-<input id="cpf" placeholder="CPF">
-<input id="datadenascimento" placeholder="Data de Nascimento">
-<input id="sexo" placeholder="Sexo">
-<input id="nomedamae" placeholder="Nome da Mãe">
-<input id="estadocivil" placeholder="Estado Civil">
-<input id="endereco" placeholder="Endereço">
-<input id="telefone" placeholder="Telefone">
-<input id="email" placeholder="E-mail">
-<input id="contatodeemergencia" placeholder="Contato de Emergência">
-
-
-<select id="tipo">
-  <option>Convenio</option>
-  <option>Particular</option>
-</select>
-
-<input type="file" id="foto">
-
-<button onclick="cadastrar()">Cadastrar</button>
-</div>
-
-<script>
-function cadastrar(){
- fetch("http://localhost:3000/atendimento",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    nome: nome.value,
-    cpf: cpf.value,
-    datadenascimento: datadenascimento.value,
-    sexo: sexo.value,
-    nomedamae: nomedamae.value,
-    estadocivil: estadocivil.value,
-    endereco: endereco.value,
-    telefone: telefone.value,
-    email: email.value,
-    contatodeemergencia: contatodeemergencia.value,
-    tipo: tipo.value
-  })
- });
- alert("Paciente enviado para triagem");
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Paciente</title>
+    <style>
+      /* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-</script>
+
+/* Página */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f6f9;
+    color: #263238;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* Container principal */
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Cabeçalho */
+.form-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.form-header h1 {
+    color: #1565c0;
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.form-header p {
+    color: #78909c;
+    font-size: 15px;
+}
+
+/* Seções */
+.form-section {
+    margin-bottom: 30px;
+    padding: 25px;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    background: #fafcfd;
+}
+
+.form-section h2 {
+    color: #37474f;
+    font-size: 19px;
+    margin-bottom: 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e3f2fd;
+}
+
+/* Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Campo */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #455a64;
+    margin-bottom: 7px;
+}
+
+/* Inputs e selects */
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #263238;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
+}
+
+/* Input de arquivo */
+.form-group input[type="file"] {
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Botões */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-primary {
+    background: #1976d2;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0d5ca8;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #eceff1;
+    color: #455a64;
+}
+
+.btn-secondary:hover {
+    background: #cfd8dc;
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+
+    body {
+        padding: 20px 10px;
+    }
+
+    .container {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .form-header h1 {
+        font-size: 24px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .form-section {
+        padding: 18px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+    </style>
+ 
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="form-header">
+            <h1>Cadastro de Paciente</h1>
+            <p>Preencha os dados do paciente para encaminhamento à triagem.</p>
+        </div>
+
+        <form id="formAtendimento" onsubmit="cadastrar(event)">
+
+            <!-- Dados pessoais -->
+            <section class="form-section">
+                <h2>Dados pessoais</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+                        <label for="nome">Nome completo</label>
+                        <input
+                            type="text"
+                            id="nome"
+                            placeholder="Digite o nome completo"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <input
+                            type="text"
+                            id="cpf"
+                            placeholder="000.000.000-00"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="datadenascimento">Data de nascimento</label>
+                        <input
+                            type="date"
+                            id="datadenascimento"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sexo">Sexo</label>
+                        <select id="sexo" required>
+                            <option value="">Selecione</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Outro">Outro</option>
+                            <option value="Não informado">Não informado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estadocivil">Estado civil</label>
+                        <select id="estadocivil" required>
+                            <option value="">Selecione</option>
+                            <option value="Solteiro">Solteiro(a)</option>
+                            <option value="Casado">Casado(a)</option>
+                            <option value="Divorciado">Divorciado(a)</option>
+                            <option value="Viúvo">Viúvo(a)</option>
+                            <option value="União estável">União estável</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="nomedamae">Nome da mãe</label>
+                        <input
+                            type="text"
+                            id="nomedamae"
+                            placeholder="Digite o nome da mãe"
+                            required
+                        >
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Contato e endereço -->
+            <section class="form-section">
+                <h2>Contato e endereço</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+                        <label for="endereco">Endereço</label>
+                        <input
+                            type="text"
+                            id="endereco"
+                            placeholder="Rua, número, bairro, cidade"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone">Telefone</label>
+                        <input
+                            type="tel"
+                            id="telefone"
+                            placeholder="(00) 00000-0000"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="exemplo@email.com"
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="contatodeemergencia">
+                            Contato de emergência
+                        </label>
+                        <input
+                            type="text"
+                            id="contatodeemergencia"
+                            placeholder="Nome e telefone do contato"
+                            required
+                        >
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Atendimento -->
+            <section class="form-section">
+                <h2>Informações do atendimento</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo de atendimento</label>
+                        <select id="tipo" required>
+                            <option value="">Selecione</option>
+                            <option value="Convenio">Convênio</option>
+                            <option value="Particular">Particular</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foto">Foto do paciente</label>
+                        <input
+                            type="file"
+                            id="foto"
+                            accept="image/*"
+                        >
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Botões -->
+            <div class="form-actions">
+                <button
+                    type="reset"
+                    class="btn btn-secondary"
+                >
+                    Limpar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Cadastrar paciente
+                </button>
+            </div>
+
+        </form>
+
+    </main>
+
+    <script>
+        async function cadastrar(event) {
+            event.preventDefault();
+
+            const dados = {
+                nome: document.getElementById("nome").value,
+                cpf: document.getElementById("cpf").value,
+                datadenascimento: document.getElementById("datadenascimento").value,
+                sexo: document.getElementById("sexo").value,
+                nomedamae: document.getElementById("nomedamae").value,
+                estadocivil: document.getElementById("estadocivil").value,
+                endereco: document.getElementById("endereco").value,
+                telefone: document.getElementById("telefone").value,
+                email: document.getElementById("email").value,
+                contatodeemergencia: document.getElementById("contatodeemergencia").value,
+                tipo: document.getElementById("tipo").value
+            };
+
+            try {
+                const resposta = await fetch(
+                    "http://localhost:3000/atendimento",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(dados)
+                    }
+                );
+
+                if (!resposta.ok) {
+                    throw new Error("Erro ao cadastrar paciente.");
+                }
+
+                alert("Paciente cadastrado e enviado para triagem!");
+
+                document.getElementById("formAtendimento").reset();
+
+            } catch (erro) {
+                console.error(erro);
+                alert("Não foi possível cadastrar o paciente.");
+            }
+        }
+    </script>
+
 </body>
 </html>
