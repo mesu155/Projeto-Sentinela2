@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dar Alta</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        body {
+            background: #f4f6f9;
+        }
+
+        .alta-container {
+            max-width: 650px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+        }
+
+        .alta-container h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .campo {
+            margin-bottom: 18px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .campo input,
+        .campo select,
+        .campo textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .campo textarea {
+            resize: vertical;
+        }
+
+        .botoes {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        button {
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-confirmar {
+            background: #28a745;
+        }
+
+        .btn-confirmar:hover {
+            background: #218838;
+        }
+
+        .btn-voltar {
+            background: #6c757d;
+        }
+
+        .btn-voltar:hover {
+            background: #5a6268;
+        }
+
+        .btn-imprimir {
+            background: #007bff;
+        }
+
+        .btn-imprimir:hover {
+            background: #0069d9;
+        }
+
+
+        /* =====================================================
+           ESTILO PARA IMPRESSÃO / PDF
+        ===================================================== */
+
+        @media print {
+
+            body {
+                background: white;
+                margin: 0;
+            }
+
+            .alta-container {
+                max-width: none;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .botoes {
+                display: none !important;
+            }
+
+            .campo input,
+            .campo select,
+            .campo textarea {
+                border: none;
+                border-bottom: 1px solid #999;
+                border-radius: 0;
+                padding-left: 0;
+                background: white;
+            }
+
+            textarea {
+                resize: none;
+            }
+
+            .alta-container h2 {
+                margin-top: 0;
+            }
+
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="alta-container">
+
+
+    <h2>
+        🏠 Alta do Paciente
+    </h2>
+
+
+    <!-- =====================================================
+         PACIENTE
+    ===================================================== -->
+
+    <div class="campo">
+
+        <label>
+            Paciente
+        </label>
+
+        <input
+            type="text"
+            id="alta-nome"
+            readonly
+        >
+
+    </div>
+
+
+    <!-- =====================================================
+         DIAGNÓSTICO
+    ===================================================== -->
+
+    <div class="campo">
+
+        <label>
+            Diagnóstico / Motivo da Alta
+        </label>
+
+        <input
+            type="text"
+            id="alta-diagnostico"
+            placeholder="Informe o diagnóstico ou motivo da alta"
+        >
+
+    </div>
+
+
+    <!-- =====================================================
+         ORIENTAÇÕES
+    ===================================================== -->
+
+    <div class="campo">
+
+        <label>
+            Orientações ao paciente
+        </label>
+
+        <textarea
+            id="alta-orientacoes"
+            rows="5"
+            placeholder="Digite as orientações para o paciente..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- =====================================================
+         RETORNO
+    ===================================================== -->
+
+    <div class="campo">
+
+        <label>
+            Retorno
+        </label>
+
+        <select id="alta-retorno">
+
+            <option value="">
+                Selecione
+            </option>
+
+            <option value="Sem retorno">
+                Sem retorno
+            </option>
+
+            <option value="7 dias">
+                7 dias
+            </option>
+
+            <option value="15 dias">
+                15 dias
+            </option>
+
+            <option value="30 dias">
+                30 dias
+            </option>
+
+            <option value="60 dias">
+                60 dias
+            </option>
+
+            <option value="90 dias">
+                90 dias
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- =====================================================
+         OBSERVAÇÕES
+    ===================================================== -->
+
+    <div class="campo">
+
+        <label>
+            Observações da alta
+        </label>
+
+        <textarea
+            id="alta-obs"
+            rows="4"
+            placeholder="Observações..."
+        ></textarea>
+
+    </div>
+
+
+    <!-- =====================================================
+         BOTÕES
+    ===================================================== -->
+
+    <div class="botoes">
+
+        <button
+            type="button"
+            class="btn-voltar"
+            onclick="voltar()"
+        >
+            ← Voltar
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-imprimir"
+            onclick="imprimirPDF()"
+        >
+            🖨️ Imprimir / PDF
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-confirmar"
+            onclick="confirmarAlta()"
+        >
+            ✅ Confirmar Alta
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+    // =====================================================
+    // PEGAR PACIENTE DA URL
+    // =====================================================
+
+    const parametros =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const paciente =
+        parametros.get("paciente");
+
+
+    // =====================================================
+    // COLOCAR NOME DO PACIENTE
+    // =====================================================
+
+    if (paciente) {
+
+        document.getElementById(
+            "alta-nome"
+        ).value = paciente;
+
+    } else {
+
+        alert(
+            "❌ Paciente não informado."
+        );
+
+    }
+
+
+    // =====================================================
+    // IMPRIMIR / SALVAR COMO PDF
+    // =====================================================
+
+    function imprimirPDF() {
+
+        const nome =
+            document.getElementById(
+                "alta-nome"
+            ).value;
+
+        const diagnostico =
+            document.getElementById(
+                "alta-diagnostico"
+            ).value;
+
+        // Verifica se existe paciente
+        if (!nome) {
+
+            alert(
+                "❌ Paciente não informado."
+            );
+
+            return;
+
+        }
+
+        // Verifica diagnóstico
+        if (!diagnostico.trim()) {
+
+            alert(
+                "⚠️ Informe o diagnóstico ou motivo da alta antes de imprimir."
+            );
+
+            return;
+
+        }
+
+        // Abre a tela de impressão do navegador
+        window.print();
+
+    }
+
+
+    // =====================================================
+    // CONFIRMAR ALTA
+    // =====================================================
+
+    function confirmarAlta() {
+
+        const nome =
+            document.getElementById(
+                "alta-nome"
+            ).value;
+
+
+        const diagnostico =
+            document.getElementById(
+                "alta-diagnostico"
+            ).value;
+
+
+        const orientacoes =
+            document.getElementById(
+                "alta-orientacoes"
+            ).value;
+
+
+        const retorno =
+            document.getElementById(
+                "alta-retorno"
+            ).value;
+
+
+        const obs =
+            document.getElementById(
+                "alta-obs"
+            ).value;
+
+
+        // -------------------------------------------------
+        // VERIFICAR PACIENTE
+        // -------------------------------------------------
+
+        if (!nome) {
+
+            alert(
+                "❌ Paciente não informado."
+            );
+
+            return;
+
+        }
+
+
+        // -------------------------------------------------
+        // VERIFICAR DIAGNÓSTICO
+        // -------------------------------------------------
+
+        if (!diagnostico.trim()) {
+
+            alert(
+                "⚠️ Informe o diagnóstico ou motivo da alta."
+            );
+
+            return;
+
+        }
+
+
+        // -------------------------------------------------
+        // ENVIAR ALTA
+        // -------------------------------------------------
+
+        fetch("/alta", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                paciente: nome,
+
+                diagnostico: diagnostico,
+
+                orientacoes: orientacoes,
+
+                retorno: retorno,
+
+                obs: obs
+
+            })
+
+        })
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Erro no servidor"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(data => {
+
+            alert(
+                "✅ Alta realizada com sucesso!"
+            );
+
+
+            // Voltar para o painel
+
+            window.location.href =
+                "medico.html";
+
+        })
+
+        .catch(error => {
+
+            console.error(
+                "Erro ao realizar alta:",
+                error
+            );
+
+            alert(
+                "❌ Erro ao realizar a alta."
+            );
+
+        });
+
+    }
+
+
+    // =====================================================
+    // VOLTAR PARA O PAINEL
+    // =====================================================
+
+    function voltar() {
+
+        window.location.href =
+            "medico.html";
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
