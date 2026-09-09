@@ -397,9 +397,23 @@
 
         }
 
-        // Abre a tela de impressão do navegador
-        window.print();
-
+window.location.href =
+    "/gerar-pdf-alta?paciente=" +
+    encodeURIComponent(nome) +
+    "&diagnostico=" +
+    encodeURIComponent(diagnostico) +
+    "&orientacoes=" +
+    encodeURIComponent(
+        document.getElementById("alta-orientacoes").value
+    ) +
+    "&retorno=" +
+    encodeURIComponent(
+        document.getElementById("alta-retorno").value
+    ) +
+    "&obs=" +
+    encodeURIComponent(
+        document.getElementById("alta-obs").value
+    );
     }
 
 
