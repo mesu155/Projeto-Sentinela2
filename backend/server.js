@@ -1,7 +1,9 @@
+
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+const PDFDocument = require("pdfkit");
 
 const app = express();
 
@@ -186,9 +188,135 @@ app.get("/medicacoes", (req, res) => {
   res.json(db.consultas);
 });
 
+// ============ GERAR PDF DA ALTA ============
+
+app.get("/gerar-pdf-alta", (req, res) => {
+
+  const paciente = req.query.paciente || "";
+  const diagnostico = req.query.diagnostico || "";
+  const orientacoes = req.query.orientacoes || "";
+  const retorno = req.query.retorno || "";
+  const obs = req.query.obs || "";
+
+  const doc = new PDFDocument({
+    size: "A4",
+    margin: 50
+  });
+
+  // Faz o navegador baixar o arquivo
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="alta-${paciente.replace(/[^a-zA-Z0-9]/g, "_")}.pdf"`
+  );
+
+  res.setHeader(
+    "Content-Type",
+    "application/pdf"
+  );
+
+  doc.pipe(res);
+
+  // Título
+  doc
+    .fontSize(20)
+    .text("HOSPITAL PRO", {
+      align: "center"
+    });
+
+  doc.moveDown();
+
+  doc
+    .fontSize(16)
+    .text("ALTA DO PACIENTE", {
+      align: "center"
+    });
+
+  doc.moveDown(2);
+
+  // Data
+  doc
+    .fontSize(11)
+    .text(
+      "Data da alta: " +
+      new Date().toLocaleDateString("pt-BR")
+    );
+
+  doc.moveDown();
+
+  // Paciente
+  doc
+    .fontSize(12)
+    .font("Helvetica-Bold")
+    .text("Paciente:");
+
+  doc
+    .font("Helvetica")
+    .text(paciente);
+
+  doc.moveDown();
+
+  // Diagnóstico
+  doc
+    .font("Helvetica-Bold")
+    .text("Diagnóstico / Motivo da Alta:");
+
+  doc
+    .font("Helvetica")
+    .text(diagnostico);
+
+  doc.moveDown();
+
+  // Orientações
+  doc
+    .font("Helvetica-Bold")
+    .text("Orientações ao paciente:");
+
+  doc
+    .font("Helvetica")
+    .text(orientacoes || "Não informado.");
+
+  doc.moveDown();
+
+  // Retorno
+  doc
+    .font("Helvetica-Bold")
+    .text("Retorno:");
+
+  doc
+    .font("Helvetica")
+    .text(retorno || "Não informado.");
+
+  doc.moveDown();
+
+  // Observações
+  doc
+    .font("Helvetica-Bold")
+    .text("Observações:");
+
+  doc
+    .font("Helvetica")
+    .text(obs || "Nenhuma observação.");
+
+  doc.moveDown(4);
+
+  doc
+    .font("Helvetica")
+    .text(
+      "________________________________________",
+      {
+        align: "center"
+      }
+    );
+
+  doc
+    .text("Assinatura do responsável", {
+      align: "center"
+    });
+
+  doc.end();
+});
+
 // START
-const PORT = process.env.PORT
-|| 3000;
-app.listen(PORT, () => {
-  console.log(`Porta ${PORT}`);
+app.listen(3000, () => {
+  console.log("🏥 Hospital Pro rodando em http://localhost:3000");
 });
