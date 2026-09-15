@@ -1,14 +1,14 @@
 {
   "name": "hospital-system",
   "version": "1.0.0",
-  "main": "api/index.js",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node backend/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.2.1",
-    "pdfkit": "^0.20.2"
+    "pdfkit": "^0.17.2"
   },
   "description": "",
   "keywords": [],
